@@ -1,4 +1,4 @@
-#define VERSION "v1.1 11/01/2024"
+#define VERSION "v1.2 13/01/2024"
 
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -13,6 +13,7 @@
 #define OFF "off"
 #define STATUS "status"
 #define TEMP "temp"
+#define EMILIANO_ID 0000
 
 
 CTBot myBot;
@@ -54,6 +55,7 @@ void setup() {
   sensors.begin();
   pinMode(RELE_PIN,OUTPUT);
   check_time=millis();
+  myBot.sendMessage(EMILIANO_ID,("Ciao, sono pronto a ricevere comandi."));
 }
 
 

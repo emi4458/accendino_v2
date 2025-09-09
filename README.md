@@ -7,11 +7,11 @@ New version of accendino based on a Wemos D1 R1 with telegram bot and temperatur
 - Check the level of the combustible in the tank (HC-SR04 ultrasonic sensor)
 
 
-<img src="images/accendino.jpg" style="max-width:500px;">
+<img src="images/accendino.jpeg" style="max-width:500px;">
 
 Telegram bot:
 
-<img src="images/bot.jpg" style="max-width:500px;">
+<img src="images/bot.jpeg" style="max-width:500px;">
 
 # Changelog
 - v1.1 New version of accendino with telegram bot and temperature sensor

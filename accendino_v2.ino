@@ -1,25 +1,19 @@
-#define VERSION "Accendino_v2 v3.0 del 09/09/2025 con AsyncTelegram2"
+#define VERSION "Accendino_v2 v3.1 del 19/09/2025 con AsyncTelegram2"
 
 #include <AsyncTelegram2.h>
 #include <ESP8266WiFi.h>
 #include <time.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include "DHT.h"
 #include "secret.h"
 
 #define USE_CLIENTSSL false
 #define MYTZ "CET+1CEST,M3.5.0,M10.5.0/3"
 
-#define DHTPIN D3     
-#define DHTTYPE DHT11  
-#define TEMP_PIN D8
 #define RELE_PIN D13
-#define HUM "hum"
 #define ON "on"
 #define OFF "off"
 #define STATUS "status"
-#define TEMP "temp"
 #define PUFFER_TEMP "puffer"
 #define LEVEL "level"
 #define PUFFER_PIN D12
@@ -45,12 +39,10 @@ int wifi_status = WL_IDLE_STATUS;
 int check_time;
 int msg_time;   
 
-OneWire garage(TEMP_PIN); 
+
 OneWire puffer(PUFFER_PIN);
-DallasTemperature garage_sensor(&garage); 
 DallasTemperature puffer_sensor(&puffer);
 
-DHT dht(DHTPIN, DHTTYPE);
 TBMessage msg;
 int status=0;
 
@@ -71,9 +63,6 @@ void setup() {
   myBot.setUpdateTime(20000);
   myBot.setTelegramToken(token);
 
-  kbd.addButton("Umidità", HUM, KeyboardButtonQuery);
-  kbd.addButton("Temperatura", TEMP, KeyboardButtonQuery);
-  kbd.addRow();
   kbd.addButton("Accendi la caldaia", ON, KeyboardButtonQuery);
   kbd.addButton("Spegni la caldaia", OFF, KeyboardButtonQuery);
   kbd.addRow();
@@ -82,9 +71,7 @@ void setup() {
   kbd.addRow();
   kbd.addButton("Livello serbatoio", LEVEL, KeyboardButtonQuery);
 
-  garage_sensor.begin();
   puffer_sensor.begin();
-  dht.begin();
   pinMode(RELE_PIN,OUTPUT);
   pinMode(TRIGGER_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
@@ -116,20 +103,8 @@ void loop() {
 
       String text=msg.text;
       text.toLowerCase();
-      
-      if (msg.callbackQueryData.equals(HUM)) {              
-        float h = readHum();
-        myBot.sendMessage(msg,("L'umidità è al "+String(h)+"%"));
-        sendButtons(msg); 
-      }
-
-      else if (msg.callbackQueryData.equals(TEMP)) {
-        float temp=readTemp();
-        myBot.sendMessage(msg,("La temperatura è di "+String(temp)+"° C"));
-        sendButtons(msg); 
-      }
     
-      else if (msg.callbackQueryData.equals(ON) || text.equals("accendi")){
+      if (msg.callbackQueryData.equals(ON) || text.equals("accendi")){
         if(status==1){
           myBot.sendMessage(msg,("La caldaia è già accesa"));
           sendButtons(msg);
@@ -192,15 +167,6 @@ void turnON(){
 void turnOFF(){
   digitalWrite(RELE_PIN, LOW);
   status=0;
-}
-
-float readHum(){
-  return dht.readHumidity();   
-}
-
-float readTemp(){
-  garage_sensor.requestTemperatures();
-  return garage_sensor.getTempCByIndex(0);
 }
 
 float readPufferTemp(){

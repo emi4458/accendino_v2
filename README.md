@@ -18,3 +18,4 @@ Telegram bot:
 - v1.2 Added messagge after power loss
 - v1.5 Replaced CTBot with AsyncTelegram2
 - v3.0 Added puffer temperature, HC-SR04 for tank level, fixed bugs with text messagges
+- v3.1 Removed garage temp sensors, useless with the new box and puffer sensor
